@@ -6,7 +6,7 @@ The command is available without an operator permission check, matching the supp
 
 ## Fabric 1.21.11
 
-Requires Java 21 and Gradle.
+Requires Java 21 and Gradle 9.7 or newer.
 
 ```sh
 cd fabric
@@ -17,7 +17,7 @@ The mod jar is written to `fabric/build/libs/`.
 
 ## Forge 1.20.1
 
-Requires Java 17 and Gradle.
+Requires Java 17 and Gradle 8.8 through 8.x (ForgeGradle 6 does not support Gradle 9 yet).
 
 ```sh
 cd forge

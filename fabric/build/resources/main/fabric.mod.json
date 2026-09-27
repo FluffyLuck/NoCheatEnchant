@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "id": "nocheatenchant",
+  "version": "1.0.0",
+  "name": "NoCheatEnchant",
+  "description": "Adds a command to enchant the item in the player's main hand.",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "dev.nocheatenchant.HoldEnchantMod"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.19.5",
+    "minecraft": "1.21.11",
+    "java": ">=21",
+    "fabric-api": "*"
+  }
+}
