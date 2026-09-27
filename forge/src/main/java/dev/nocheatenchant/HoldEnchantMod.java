@@ -32,7 +32,7 @@ public class HoldEnchantMod {
                             return 0;
                         }
 
-                        Enchantment enchantment = ResourceArgument.getEnchantment(context, "enchantment");
+                        Enchantment enchantment = ResourceArgument.getEnchantment(context, "enchantment").value();
                         stack.enchant(enchantment, 1);
                         player.sendSystemMessage(Component.literal("Enchanted successfully!"));
                         return 1;
