@@ -13,10 +13,14 @@ import net.minecraft.util.Hand;
 public class HoldEnchantMod implements ModInitializer {
     @Override
     public void onInitialize() {
-        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) ->
-            dispatcher.register(
-                CommandManager.literal("giveenchant")
+        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
+            var enchantmentLookup = registryAccess.getOrThrow(RegistryKeys.ENCHANTMENT);
+            var command = CommandManager.literal("giveenchant")
                     .then(CommandManager.argument("enchantment", RegistryEntryReferenceArgumentType.registryEntry(registryAccess, RegistryKeys.ENCHANTMENT))
+                        .suggests((context, builder) -> {
+                            enchantmentLookup.streamKeys().forEach(key -> builder.suggest(key.getValue().toString()));
+                            return builder.buildFuture();
+                        })
                         .then(CommandManager.argument("level", IntegerArgumentType.integer(1, 255))
                             .suggests((context, builder) -> {
                                 for (int suggestedLevel = 1; suggestedLevel <= 255; suggestedLevel++) {
@@ -39,8 +43,9 @@ public class HoldEnchantMod implements ModInitializer {
                                 return 1;
                             })
                         )
-                    )
-            )
-        );
+                    );
+            var commandNode = dispatcher.register(command);
+            dispatcher.register(CommandManager.literal("giveechant").redirect(commandNode));
+        });
     }
 }

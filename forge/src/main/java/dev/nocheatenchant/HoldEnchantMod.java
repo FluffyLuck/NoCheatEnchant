@@ -22,9 +22,13 @@ public class HoldEnchantMod {
 
     @SubscribeEvent
     public void onRegisterCommands(RegisterCommandsEvent event) {
-        event.getDispatcher().register(
-            Commands.literal("giveenchant")
+        var enchantmentLookup = event.getBuildContext().holderLookup(Registries.ENCHANTMENT);
+        var command = Commands.literal("giveenchant")
                 .then(Commands.argument("enchantment", ResourceArgument.resource(event.getBuildContext(), Registries.ENCHANTMENT))
+                    .suggests((context, builder) -> {
+                        enchantmentLookup.listElementIds().forEach(id -> builder.suggest(id.toString()));
+                        return builder.buildFuture();
+                    })
                     .then(Commands.argument("level", IntegerArgumentType.integer(1, 255))
                         .suggests((context, builder) -> {
                             for (int suggestedLevel = 1; suggestedLevel <= 255; suggestedLevel++) {
@@ -47,7 +51,8 @@ public class HoldEnchantMod {
                             return 1;
                         })
                     )
-                )
-        );
+                );
+            var commandNode = event.getDispatcher().register(command);
+            event.getDispatcher().register(Commands.literal("giveechant").redirect(commandNode));
     }
 }
