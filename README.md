@@ -1,6 +1,6 @@
 # NoCheatEnchant
 
-A small server-side mod that adds `/giveenchant <enchantmentid>`. It applies the requested enchantment at level I to the executing player's main-hand item. Use a namespaced ID, for example `/giveenchant minecraft:sharpness`.
+A small server-side mod that adds `/giveenchant <enchantmentid> <level>`. It applies the requested enchantment at the chosen level to the executing player's main-hand item. Use a namespaced ID, for example `/giveenchant minecraft:sharpness 5`. Tab completion suggests registered enchantments and levels from 1 to 255.
 
 The command is available without an operator permission check, matching the supplied examples. Both projects target dedicated loader/version combinations because Fabric 1.21.11 and Forge 1.20.1 are different Minecraft versions.
 

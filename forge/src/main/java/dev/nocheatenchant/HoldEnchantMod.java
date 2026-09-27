@@ -1,5 +1,6 @@
 package dev.nocheatenchant;
 
+import com.mojang.brigadier.arguments.IntegerArgumentType;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.ResourceArgument;
 import net.minecraft.core.registries.Registries;
@@ -24,19 +25,28 @@ public class HoldEnchantMod {
         event.getDispatcher().register(
             Commands.literal("giveenchant")
                 .then(Commands.argument("enchantment", ResourceArgument.resource(event.getBuildContext(), Registries.ENCHANTMENT))
-                    .executes(context -> {
-                        ServerPlayer player = context.getSource().getPlayer();
-                        ItemStack stack = player.getItemInHand(InteractionHand.MAIN_HAND);
-                        if (stack.isEmpty()) {
-                            player.sendSystemMessage(Component.literal("You are not holding an item!"));
-                            return 0;
-                        }
+                    .then(Commands.argument("level", IntegerArgumentType.integer(1, 255))
+                        .suggests((context, builder) -> {
+                            for (int suggestedLevel = 1; suggestedLevel <= 255; suggestedLevel++) {
+                                builder.suggest(suggestedLevel);
+                            }
+                            return builder.buildFuture();
+                        })
+                        .executes(context -> {
+                            ServerPlayer player = context.getSource().getPlayer();
+                            ItemStack stack = player.getItemInHand(InteractionHand.MAIN_HAND);
+                            if (stack.isEmpty()) {
+                                player.sendSystemMessage(Component.literal("You are not holding an item!"));
+                                return 0;
+                            }
 
-                        Enchantment enchantment = ResourceArgument.getEnchantment(context, "enchantment").value();
-                        stack.enchant(enchantment, 1);
-                        player.sendSystemMessage(Component.literal("Enchanted successfully!"));
-                        return 1;
-                    })
+                            Enchantment enchantment = ResourceArgument.getEnchantment(context, "enchantment").value();
+                            int level = IntegerArgumentType.getInteger(context, "level");
+                            stack.enchant(enchantment, level);
+                            player.sendSystemMessage(Component.literal("Enchanted successfully!"));
+                            return 1;
+                        })
+                    )
                 )
         );
     }
